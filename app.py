@@ -206,3 +206,11 @@ def gerar_palpites():
 def palpites():
     palpites, ultimos = gerar_palpites()
     return render_template('palpites.html', palpites=palpites, ultimos=ultimos)
+from flask import request, redirect, url_for, flash
+
+# Rota para o simulador de apostas
+@app.route('/simulador', methods=['GET', 'POST'])
+@login_required
+def simulador():
+    # O simulador é 100% front-end, mas podemos expandir aqui para salvar histórico, limites etc.
+    return render_template('simulador.html')
