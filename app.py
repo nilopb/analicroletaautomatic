@@ -185,3 +185,24 @@ def iframe_roleta():
 
 if __name__ == '__main__':
     app.run(debug=True)
+import random
+
+# Função para simular coleta dos últimos 100 números da roleta
+def get_ultimos_numeros():
+    # Aqui você deve fazer scraping ou API real, mas vamos simular
+    return [random.randint(0, 36) for _ in range(100)]
+
+# Função simples que gera os 5 números mais frequentes nos últimos 100
+def gerar_palpites():
+    ultimos = get_ultimos_numeros()
+    freq = {}
+    for num in ultimos:
+        freq[num] = freq.get(num, 0) + 1
+    palpites = sorted(freq, key=freq.get, reverse=True)[:5]
+    return palpites, ultimos
+
+@app.route('/palpites')
+@login_required
+def palpites():
+    palpites, ultimos = gerar_palpites()
+    return render_template('palpites.html', palpites=palpites, ultimos=ultimos)
