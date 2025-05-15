@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Roleta ao Vivo - Roleta Brasileira</title>
+  <style>
+    body {
+      margin: 0; 
+      background: #121212; 
+      color: #fff; 
+      font-family: Arial, sans-serif;
+      display: flex; 
+      flex-direction: column; 
+      height: 100vh;
+    }
+    header {
+      background-color: #1f1f1f;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #333;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+      color: #e91e63;
+    }
+    header a {
+      color: #e91e63;
+      text-decoration: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    iframe {
+      flex-grow: 1;
+      border: none;
+      width: 100%;
+      min-height: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Roleta ao Vivo</h1>
+    <a href="{{ url_for('home') }}">Voltar</a>
+  </header>
+  <iframe src="https://lxgo.me/go?brand=lotusbet&bta=30173_0253" allowfullscreen></iframe>
+</body>
+</html>
