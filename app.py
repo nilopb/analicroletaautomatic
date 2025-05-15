@@ -218,3 +218,9 @@ def simulador():
 @login_required
 def simulador():
     return render_template('simulador.html')
+from flask_login import login_required
+
+@app.route('/simulador')
+@login_required
+def simulador():
+    return render_template('simulador.html')
