@@ -6,120 +6,166 @@
   <title>Simulador de Apostas - Roleta Brasileira</title>
   <style>
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
       background: #121212;
       color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
       padding: 20px;
     }
-    header {
-      background-color: #1f1f1f;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #333;
-      margin-bottom: 20px;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 20px;
+    h1 {
       color: #e91e63;
+      text-align: center;
     }
-    header a {
-      color: #e91e63;
-      text-decoration: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .form-group {
-      margin-bottom: 15px;
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 8px;
     }
     label {
       display: block;
-      margin-bottom: 5px;
+      margin: 10px 0 5px;
     }
-    input[type="number"], select {
+    input[type="number"] {
       width: 100%;
       padding: 8px;
       border-radius: 5px;
       border: none;
+      margin-bottom: 15px;
       font-size: 16px;
+    }
+    input[type="checkbox"] {
+      margin-right: 10px;
     }
     button {
       background: #e91e63;
       border: none;
-      color: #fff;
       padding: 10px 20px;
+      color: #fff;
       border-radius: 5px;
       cursor: pointer;
+      margin-right: 10px;
       font-size: 16px;
-      margin-top: 10px;
     }
     button:hover {
       background: #c2185b;
     }
     .resultado {
       margin-top: 20px;
-      background: #1e1e1e;
-      padding: 15px;
-      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .nav-link {
+      display: block;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .nav-link a {
+      color: #e91e63;
+      text-decoration: none;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <header>
+  <div class="container">
     <h1>Simulador de Apostas</h1>
-    <a href="{{ url_for('home') }}">Voltar</a>
-  </header>
+    <div class="nav-link">
+      <a href="{{ url_for('home') }}">&larr; Voltar para Home</a>
+    </div>
 
-  <form id="simuladorForm">
-    <div class="form-group">
-      <label for="numero">Escolha um número da roleta (0-36):</label>
+    <form id="simuladorForm">
+      <label for="numero">Número da Roleta (0-36):</label>
       <input type="number" id="numero" name="numero" min="0" max="36" required />
-    </div>
-    <div class="form-group">
-      <label for="valor">Valor da aposta (R$):</label>
-      <input type="number" id="valor" name="valor" min="1" step="0.01" required />
-    </div>
-    <button type="submit">Simular Aposta</button>
-  </form>
 
-  <div class="resultado" id="resultado"></div>
+      <label for="valor">Valor da Aposta (R$):</label>
+      <input type="number" id="valor" name="valor" min="1" step="0.01" required />
+
+      <label>
+        <input type="checkbox" id="modoResponsavel" />
+        Ativar Modo Responsável (limite de apostas)
+      </label>
+
+      <div id="limites" style="display:none; margin-top:10px;">
+        <label for="limiteTempo">Limite de Tempo entre apostas (segundos):</label>
+        <input type="number" id="limiteTempo" min="1" value="10" />
+
+        <label for="limiteValor">Limite máximo de aposta total (R$):</label>
+        <input type="number" id="limiteValor" min="1" value="100" />
+      </div>
+
+      <button type="submit">Simular Aposta</button>
+      <button type="button" id="limparBtn">Limpar</button>
+    </form>
+
+    <div class="resultado" id="resultado"></div>
+  </div>
 
   <script>
-    // Limites para modo responsável
-    const limiteTempoMinutos = 5; // ex: 5 minutos
-    const limiteValor = 100; // ex: R$100
+    const modoResponsavelCheckbox = document.getElementById('modoResponsavel');
+    const limitesDiv = document.getElementById('limites');
+    const simuladorForm = document.getElementById('simuladorForm');
+    const resultadoDiv = document.getElementById('resultado');
+    const limparBtn = document.getElementById('limparBtn');
 
-    let tempoJogando = 0;
-    let valorApostadoTotal = 0;
-    let timer;
+    let apostasFeitas = 0;
+    let totalApostado = 0;
+    let ultimoTempo = 0;
 
-    function iniciarContador() {
-      timer = setInterval(() => {
-        tempoJogando++;
-        if (tempoJogando >= limiteTempoMinutos * 60) {
-          alert("Limite de tempo de jogo atingido. Faça uma pausa!");
-          clearInterval(timer);
-          document.getElementById("simuladorForm").querySelector("button").disabled = true;
-        }
-      }, 1000);
-    }
+    modoResponsavelCheckbox.addEventListener('change', () => {
+      if (modoResponsavelCheckbox.checked) {
+        limitesDiv.style.display = 'block';
+      } else {
+        limitesDiv.style.display = 'none';
+      }
+    });
 
-    document.getElementById("simuladorForm").addEventListener("submit", function(e) {
+    simuladorForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      const numero = parseInt(document.getElementById("numero").value);
-      const valor = parseFloat(document.getElementById("valor").value);
+      const numero = parseInt(document.getElementById('numero').value);
+      const valor = parseFloat(document.getElementById('valor').value);
+      const modoResponsavel = modoResponsavelCheckbox.checked;
+      const limiteTempo = parseInt(document.getElementById('limiteTempo').value);
+      const limiteValor = parseFloat(document.getElementById('limiteValor').value);
 
-      if (valorApostadoTotal + valor > limiteValor) {
-        alert("Você atingiu o limite máximo de apostas.");
-        return;
+      const agora = Date.now();
+
+      if (modoResponsavel) {
+        if (ultimoTempo && (agora - ultimoTempo) < limiteTempo * 1000) {
+          resultadoDiv.textContent = `Por favor, aguarde ${limiteTempo} segundos entre apostas.`;
+          return;
+        }
+        if ((totalApostado + valor) > limiteValor) {
+          resultadoDiv.textContent = `Limite máximo de aposta total (R$${limiteValor.toFixed(2)}) atingido.`;
+          return;
+        }
       }
 
-      valorApostadoTotal += valor;
+      // Simulação simples: chance fixa de ganhar (por ex. 1/37)
+      const chanceGanha = 1 / 37;
+      const ganhou = Math.random() < chanceGanha;
 
-      // Simulação simples: 1/37 chance de ganhar, payout 35x
-      const ganhou = Math.random() < (1/37);
-      let mensagem = `Você apostou R$
+      if (ganhou) {
+        const premio = valor * 35; // pagamento típico roleta
+        resultadoDiv.textContent = `Parabéns! Você ganhou R$${premio.toFixed(2)} apostando no número ${numero}.`;
+      } else {
+        resultadoDiv.textContent = `Você perdeu R$${valor.toFixed(2)} apostando no número ${numero}. Tente novamente!`;
+      }
+
+      apostasFeitas++;
+      totalApostado += valor;
+      ultimoTempo = agora;
+    });
+
+    limparBtn.addEventListener('click', () => {
+      simuladorForm.reset();
+      resultadoDiv.textContent = '';
+      apostasFeitas = 0;
+      totalApostado = 0;
+      ultimoTempo = 0;
+    });
+  </script>
+</body>
+</html>
