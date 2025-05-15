@@ -214,3 +214,7 @@ from flask import request, redirect, url_for, flash
 def simulador():
     # O simulador é 100% front-end, mas podemos expandir aqui para salvar histórico, limites etc.
     return render_template('simulador.html')
+@app.route('/simulador')
+@login_required
+def simulador():
+    return render_template('simulador.html')
