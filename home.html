@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Área do Usuário - Roleta Brasileira</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: #fff;
+  }
+  header {
+    background-color: #1f1f1f;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+  }
+  header h1 {
+    font-size: 20px;
+    margin: 0;
+  }
+  header form button {
+    background: #e91e63;
+    border: none;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  header form button:hover {
+    background: #c2185b;
+  }
+  main {
+    padding: 20px;
+  }
+  .section {
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  .section h2 {
+    margin-top: 0;
+    color: #e91e63;
+  }
+  #btnRoletaAoVivo {
+    background-color: #e91e63;
+    border: none;
+    padding: 12px 20px;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  #btnRoletaAoVivo:hover {
+    background-color: #c2185b;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Roleta Brasileira</h1>
+  <form action="{{ url_for('logout') }}" method="GET">
+    <button type="submit">Sair</button>
+  </form>
+</header>
+
+<main>
+  <div class="section">
+    <h2>Palpites Inteligentes</h2>
+    {% if palpites %}
+      <p>Estes são os 5 números mais prováveis com base nos últimos resultados da roleta:</p>
+      <ul>
+        {% for num in palpites %}
+          <li style="font-size: 20px; font-weight: bold;">Número: {{ num }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Não foi possível gerar os palpites agora. Tente novamente mais tarde.</p>
+    {% endif %}
+  </div>
+
+  <div class="section">
+    <h2>Estatísticas dos Últimos Resultados</h2>
+    <canvas id="graficoRoleta" width="400" height="200"></canvas>
+  </div>
+
+  <button id="btnRoletaAoVivo">Abrir Roleta ao Vivo</button>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Dados de exemplo: substituir pelos dados reais do backend
+  const dados = {
+    labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    datasets: [{
+      label: 'Frequência',
+      data: [5, 8, 6, 10, 4, 7, 9, 3, 2, 1],
+      backgroundColor: 'rgba(233, 30, 99, 0.7)'
+    }]
+  };
+
+  const config = {
+    type: 'bar',
+    data: dados,
+    options: {
+      scales: {
+        y: { beginAtZero: true }
+      },
+      plugins: {
+        legend: { labels: { color: 'white' } }
+      }
+    }
+  };
+
+  const meuGrafico = new Chart(
+    document.getElementById('graficoRoleta'),
+    config
+  );
+
+  document.getElementById('btnRoletaAoVivo').addEventListener('click', () => {
+    window.open('https://lxgo.me/go?brand=lotusbet&bta=30173_0253', '_blank');
+  });
+</script>
+</body>
+</html>
