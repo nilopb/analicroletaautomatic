@@ -1,96 +1,85 @@
-<!-- templates/login.html -->
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login - Roleta Brasileira</title>
-  <style>
-    body {
-      background: #121212;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .container {
-      background: #1f1f1f;
-      padding: 30px 40px;
-      border-radius: 8px;
-      width: 300px;
-      box-shadow: 0 0 10px rgba(233,30,99,0.7);
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #e91e63;
-    }
-    input[type="text"],
-    input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: none;
-      border-radius: 5px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      background: #e91e63;
-      border: none;
-      color: white;
-      font-weight: bold;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    button:hover {
-      background: #c2185b;
-    }
-    .link {
-      margin-top: 15px;
-      text-align: center;
-    }
-    .link a {
-      color: #e91e63;
-      text-decoration: none;
-    }
-    .alert {
-      padding: 10px;
-      background-color: #c62828;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      text-align: center;
-    }
-    .success {
-      background-color: #388e3c;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Login - Roleta Brasileira</title>
+<style>
+  body {
+    background: #121212;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .login-box {
+    background: #1f1f1f;
+    padding: 30px;
+    border-radius: 8px;
+    width: 320px;
+    box-shadow: 0 0 10px #e91e63;
+  }
+  h2 {
+    text-align: center;
+    color: #e91e63;
+    margin-bottom: 20px;
+  }
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    background: #e91e63;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #c2185b;
+  }
+  .links {
+    margin-top: 15px;
+    text-align: center;
+  }
+  .links a {
+    color: #e91e63;
+    text-decoration: none;
+  }
+  .alert {
+    background: #f44336;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: center;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
+  <div class="login-box">
     <h2>Login</h2>
-
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
-          <div class="alert {% if category == 'success' %}success{% endif %}">{{ message }}</div>
+          <div class="alert">{{ message }}</div>
         {% endfor %}
       {% endif %}
     {% endwith %}
-
-    <form method="POST" action="{{ url_for('login') }}">
-      <input type="text" name="username" placeholder="Usuário" required autofocus />
-      <input type="password" name="password" placeholder="Senha" required />
+    <form method="POST">
+      <input type="text" name="username_email" placeholder="Usuário ou E-mail" required />
+      <input type="password" name="senha" placeholder="Senha" required />
       <button type="submit">Entrar</button>
     </form>
-
-    <div class="link">
-      <a href="{{ url_for('registro') }}">Não tem conta? Cadastre-se</a>
+    <div class="links">
+      <p>Não tem conta? <a href="{{ url_for('registro') }}">Registre-se</a></p>
     </div>
   </div>
 </body>
