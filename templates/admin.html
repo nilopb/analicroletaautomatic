@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Painel do Administrador - Roleta Brasileira</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: #fff;
+  }
+  header {
+    background-color: #1f1f1f;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 20px;
+  }
+  header form button {
+    background: #e91e63;
+    border: none;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  header form button:hover {
+    background: #c2185b;
+  }
+  main {
+    padding: 20px;
+  }
+  h2 {
+    color: #e91e63;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  th, td {
+    border: 1px solid #333;
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    background-color: #2c2c2c;
+  }
+  button.delete-btn {
+    background-color: #d32f2f;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  button.delete-btn:hover {
+    background-color: #9a0000;
+  }
+  .alerta-novos {
+    background: #c2185b;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Painel do Administrador</h1>
+  <form action="{{ url_for('logout') }}" method="GET">
+    <button type="submit">Sair</button>
+  </form>
+</header>
+
+<main>
+  {% if novos_cadastros %}
+  <div class="alerta-novos">
+    <strong>Atenção!</strong> Novos usuários cadastrados:
+    <ul>
+      {% for user in novos_cadastros %}
+        <li>{{ user.username }} ({{ user.email }})</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <section>
+    <h2>Usuários Cadastrados</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Usuário</th>
+          <th>Email</th>
+          <th>Moedas</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in usuarios %}
+        <tr>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.coins }}</td>
+          <td>
+            <form action="{{ url_for('deletar_usuario', user_id=user.id) }}" method="POST" style="display:inline;">
+              <button class="delete-btn" type="submit" onclick="return confirm('Confirma exclusão do usuário?')">Deletar</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Links de Vídeos</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Link</th>
+          <th>Usuário</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for link in links %}
+        <tr>
+          <td><a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.url }}</a></td>
+          <td>{{ link.usuario }}</td>
+          <td>
+            <form action="{{ url_for('deletar_link', link_id=link.id) }}" method="POST" style="display:inline;">
+              <button class="delete-btn" type="submit" onclick="return confirm('Confirma exclusão do link?')">Deletar</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</main>
+</body>
+</html>
