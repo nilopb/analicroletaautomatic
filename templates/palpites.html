@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Palpites Inteligentes - Roleta Brasileira</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #fff;
+    }
+    header {
+      background-color: #1f1f1f;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #333;
+    }
+    header h1 {
+      font-size: 20px;
+      margin: 0;
+      color: #e91e63;
+    }
+    header nav a {
+      color: #e91e63;
+      text-decoration: none;
+      margin-left: 15px;
+      font-weight: bold;
+    }
+    header nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      padding: 20px;
+    }
+    .section {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .section h2 {
+      margin-top: 0;
+      color: #e91e63;
+    }
+    ul li {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Roleta Brasileira</h1>
+    <nav>
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('logout') }}">Sair</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="section">
+      <h2>Palpites Inteligentes</h2>
+      {% if palpites %}
+        <p>Estes são os 5 números mais prováveis com base nos últimos resultados da roleta:</p>
+        <ul>
+          {% for num in palpites %}
+            <li>Número: {{ num }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>Não foi possível gerar os palpites agora. Tente novamente mais tarde.</p>
+      {% endif %}
+    </div>
+
+    <div class="section">
+      <h2>Estatísticas dos Últimos Resultados</h2>
+      <canvas id="graficoRoleta" width="400" height="200"></canvas>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Exemplo de dados que deveriam ser enviados pelo backend
+    const dados = {
+      labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      datasets: [{
+        label: 'Frequência',
+        data: [5, 8, 6, 10, 4, 7, 9, 3, 2, 1], // substitua pelos dados reais do backend se quiser
+        backgroundColor: 'rgba(233, 30, 99, 0.7)'
+      }]
+    };
+
+    const config = {
+      type: 'bar',
+      data: dados,
+      options: {
+        scales: {
+          y: { beginAtZero: true }
+        },
+        plugins: {
+          legend: { labels: { color: 'white' } }
+        }
+      }
+    };
+
+    new Chart(document.getElementById('graficoRoleta'), config);
+  </script>
+</body>
+</html>
